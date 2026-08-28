@@ -25,8 +25,9 @@ export default function Cart({
 
   const totals = computeTotals(lines, overallDiscount);
 
+  // CHANGED: width is now responsive (340px on smaller screens, 380px on xl+) and overflow-hidden added
   return (
-    <div className="w-[380px] shrink-0 bg-white border-l border-slate-200 flex flex-col h-[calc(100vh-4rem)] sticky top-16">
+    <div className="w-[340px] xl:w-[380px] shrink-0 bg-white border-l border-slate-200 flex flex-col h-[calc(100vh-4rem)] sticky top-16 overflow-hidden">
       <div className="p-4 border-b border-slate-100 flex items-center gap-2">
         <UserIcon size={16} className="text-slate-400" />
         <select

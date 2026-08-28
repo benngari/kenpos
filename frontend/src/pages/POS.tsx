@@ -193,9 +193,10 @@ export default function POS() {
 
   const totals = computeTotals(lines, overallDiscount);
 
+  // CHANGED: added w-full min-w-0 to outer div, min-w-0 to inner div
   return (
-    <div className="flex">
-      <div className="flex-1">
+    <div className="flex w-full min-w-0">
+      <div className="flex-1 min-w-0">
         <Header title="Point of Sale" />
         <div className="p-4">
           <div className="flex items-center gap-3 mb-4">
