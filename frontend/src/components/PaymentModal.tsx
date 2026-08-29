@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Modal from "./Modal";
+import { useUiStore } from "../store/uiStore";
 import { Payment, PaymentMethod } from "../types";
 import clsx from "clsx";
 import { Plus, Trash2 } from "lucide-react";
@@ -25,6 +26,7 @@ export default function PaymentModal({
   onConfirm: (payments: Payment[]) => void;
   submitting: boolean;
 }) {
+  const { touchMode } = useUiStore();
   const [splitMode, setSplitMode] = useState(false);
   const [method, setMethod] = useState<PaymentMethod>("cash");
   const [amount, setAmount] = useState(total.toFixed(2));
@@ -74,27 +76,38 @@ export default function PaymentModal({
     ? method !== "credit" || hasCustomer
     : false;
 
+  const inputCls = clsx(
+    "w-full border-2 border-slate-200 rounded-lg",
+    touchMode ? "px-4 py-4 text-lg rounded-xl" : "px-3 py-2 text-sm"
+  );
+
   return (
-    <Modal title="Take Payment" onClose={onClose} width="max-w-md">
-      <div className="space-y-4">
-        <div className="flex justify-between items-center bg-slate-50 rounded-lg p-3">
-          <span className="text-sm text-slate-500">Amount due</span>
-          <span className="text-xl font-bold text-slate-900">KES {total.toFixed(2)}</span>
+    <Modal title="Take Payment" onClose={onClose} width={touchMode ? "max-w-lg" : "max-w-md"}>
+      <div className={touchMode ? "space-y-5" : "space-y-4"}>
+        <div className={clsx("flex justify-between items-center bg-slate-50 rounded-xl", touchMode ? "p-5" : "p-3")}>
+          <span className={clsx("text-slate-500", touchMode ? "text-base" : "text-sm")}>Amount due</span>
+          <span className={clsx("font-bold text-slate-900", touchMode ? "text-3xl" : "text-xl")}>KES {total.toFixed(2)}</span>
         </div>
 
-        <label className="flex items-center gap-2 text-sm text-slate-600">
-          <input type="checkbox" checked={splitMode} onChange={(e) => setSplitMode(e.target.checked)} />
+        <label className={clsx("flex items-center gap-2 text-slate-600", touchMode ? "text-base" : "text-sm")}>
+          <input
+            type="checkbox"
+            checked={splitMode}
+            onChange={(e) => setSplitMode(e.target.checked)}
+            className={touchMode ? "w-5 h-5" : undefined}
+          />
           Split payment across multiple methods
         </label>
 
-        <div className="grid grid-cols-5 gap-1.5">
+        <div className={clsx("grid grid-cols-5", touchMode ? "gap-2.5" : "gap-1.5")}>
           {METHODS.map((m) => (
             <button
               key={m.key}
               onClick={() => setMethod(m.key)}
               disabled={m.key === "credit" && !hasCustomer}
               className={clsx(
-                "py-2 text-xs font-medium rounded-lg border",
+                "font-semibold rounded-xl border-2",
+                touchMode ? "py-4 text-sm" : "py-2 text-xs rounded-lg",
                 method === m.key
                   ? "bg-brand-600 text-white border-brand-600"
                   : "border-slate-200 text-slate-600 hover:bg-slate-50",
@@ -110,27 +123,22 @@ export default function PaymentModal({
           <p className="text-xs text-red-500">Select a customer in the cart before using credit.</p>
         )}
 
-        <div className="space-y-2">
-          <label className="text-xs text-slate-500">
+        <div className={touchMode ? "space-y-3" : "space-y-2"}>
+          <label className={clsx("text-slate-500", touchMode ? "text-sm" : "text-xs")}>
             {splitMode ? "Amount for this method" : "Amount received"}
           </label>
-          <input
-            type="number"
-            className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+          <input type="number" className={inputCls} value={amount} onChange={(e) => setAmount(e.target.value)} />
           {method === "mpesa" && (
             <>
               <input
                 placeholder="M-Pesa transaction code"
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                className={inputCls}
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
               />
               <input
                 placeholder="Phone number"
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+                className={inputCls}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
@@ -139,7 +147,7 @@ export default function PaymentModal({
           {(method === "card" || method === "bank") && (
             <input
               placeholder="Reference number"
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm"
+              className={inputCls}
               value={reference}
               onChange={(e) => setReference(e.target.value)}
             />
@@ -149,19 +157,30 @@ export default function PaymentModal({
         {splitMode && (
           <button
             onClick={addSplitLine}
-            className="w-full flex items-center justify-center gap-1.5 py-2 text-sm rounded-lg border border-dashed border-slate-300 text-slate-500 hover:bg-slate-50"
+            className={clsx(
+              "w-full flex items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 hover:bg-slate-50",
+              touchMode ? "py-4 text-base" : "py-2 text-sm"
+            )}
           >
-            <Plus size={14} /> Add payment line
+            <Plus size={touchMode ? 18 : 14} /> Add payment line
           </button>
         )}
 
         {splitMode && splits.length > 0 && (
           <div className="space-y-1.5">
             {splits.map((s, i) => (
-              <div key={i} className="flex justify-between items-center text-sm bg-slate-50 rounded-lg px-3 py-1.5">
-                <span className="capitalize">{s.method}: KES {s.amount.toFixed(2)}</span>
+              <div
+                key={i}
+                className={clsx(
+                  "flex justify-between items-center bg-slate-50 rounded-lg px-3",
+                  touchMode ? "text-base py-2.5" : "text-sm py-1.5"
+                )}
+              >
+                <span className="capitalize">
+                  {s.method}: KES {s.amount.toFixed(2)}
+                </span>
                 <button onClick={() => removeSplit(i)} className="text-slate-400 hover:text-red-500">
-                  <Trash2 size={14} />
+                  <Trash2 size={touchMode ? 18 : 14} />
                 </button>
               </div>
             ))}
@@ -173,7 +192,12 @@ export default function PaymentModal({
         )}
 
         {!splitMode && method === "cash" && singleAmount > total && (
-          <div className="flex justify-between text-sm font-medium bg-green-50 text-green-700 rounded-lg px-3 py-2">
+          <div
+            className={clsx(
+              "flex justify-between font-medium bg-green-50 text-green-700 rounded-xl px-4",
+              touchMode ? "text-lg py-3.5" : "text-sm py-2"
+            )}
+          >
             <span>Change</span>
             <span>KES {change.toFixed(2)}</span>
           </div>
@@ -182,7 +206,10 @@ export default function PaymentModal({
         <button
           onClick={submit}
           disabled={!canSubmit || submitting}
-          className="w-full py-3 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold disabled:opacity-40"
+          className={clsx(
+            "w-full rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold disabled:opacity-40",
+            touchMode ? "py-5 text-xl" : "py-3 text-base font-semibold"
+          )}
         >
           {submitting ? "Processing..." : "Complete Payment"}
         </button>

@@ -33,24 +33,24 @@ export default function NumericKeypad({
   }
 
   return (
-    <Modal title={title} onClose={onClose} width="max-w-xs">
-      <div className="text-center text-4xl font-bold text-slate-800 bg-slate-50 rounded-xl py-4 mb-4">
+    <Modal title={title} onClose={onClose} width="max-w-sm">
+      <div className="text-center text-5xl font-bold text-slate-800 bg-slate-50 rounded-2xl py-6 mb-5">
         {value}
       </div>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-3">
         {KEYS.map((k) => (
           <button
             key={k}
             onClick={() => press(k)}
-            className="h-16 rounded-xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-2xl font-semibold text-slate-700 flex items-center justify-center"
+            className="h-20 rounded-2xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-3xl font-bold text-slate-700 flex items-center justify-center"
           >
-            {k === "clear" ? "C" : k === "back" ? <Delete size={22} /> : k}
+            {k === "clear" ? "C" : k === "back" ? <Delete size={26} /> : k}
           </button>
         ))}
       </div>
       <button
         onClick={confirm}
-        className="w-full mt-4 py-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-lg font-bold"
+        className="w-full mt-5 py-5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white text-xl font-bold"
       >
         Confirm
       </button>

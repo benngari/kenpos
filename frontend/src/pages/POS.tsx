@@ -200,10 +200,10 @@ export default function POS() {
     <div className="flex w-full min-w-0">
       <div className="flex-1 min-w-0">
         <Header title="Point of Sale" />
-        <div className="p-4">
-          <div className="flex items-center gap-3 mb-4">
+        <div className={touchMode ? "p-6" : "p-4"}>
+          <div className={clsx("flex items-center gap-3", touchMode ? "mb-6" : "mb-4")}>
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={touchMode ? 20 : 16} />
               <input
                 ref={searchRef}
                 value={search}
@@ -211,29 +211,29 @@ export default function POS() {
                 onKeyDown={handleSearchKeyDown}
                 placeholder={touchMode ? "Search by name, SKU, or scan barcode" : "Search by name, SKU, or scan barcode (F2)"}
                 className={clsx(
-                  "w-full pl-9 pr-9 border border-slate-200 rounded-lg",
-                  touchMode ? "py-4 text-base" : "py-2.5 text-sm"
+                  "w-full pl-10 pr-10 border-2 border-slate-200 rounded-xl",
+                  touchMode ? "py-5 text-lg rounded-2xl" : "py-2.5 text-sm"
                 )}
               />
-              <Barcode className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+              <Barcode className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300" size={touchMode ? 20 : 16} />
             </div>
             <button
               onClick={openHeldSales}
               className={clsx(
-                "flex items-center gap-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 whitespace-nowrap",
-                touchMode ? "px-4 py-4 text-base" : "px-3 py-2.5 text-sm"
+                "flex items-center gap-2 border-2 border-slate-200 text-slate-600 hover:bg-slate-50 whitespace-nowrap font-semibold",
+                touchMode ? "px-6 py-5 text-lg rounded-2xl" : "px-3 py-2.5 text-sm rounded-lg"
               )}
             >
-              <PauseCircle size={touchMode ? 20 : 16} /> Held Sales
+              <PauseCircle size={touchMode ? 24 : 16} /> Held Sales
             </button>
           </div>
 
-          <div className="flex gap-2 mb-4 overflow-x-auto scrollbar-thin pb-1">
+          <div className={clsx("flex gap-2.5 overflow-x-auto scrollbar-thin pb-1", touchMode ? "mb-6" : "mb-4")}>
             <button
               onClick={() => setActiveCategory(null)}
               className={clsx(
-                "rounded-full font-medium whitespace-nowrap border",
-                touchMode ? "px-4 py-2.5 text-sm" : "px-3 py-1.5 text-xs",
+                "rounded-full font-semibold whitespace-nowrap border-2",
+                touchMode ? "px-5 py-3.5 text-base" : "px-3 py-1.5 text-xs",
                 !activeCategory ? "bg-brand-600 text-white border-brand-600" : "border-slate-200 text-slate-600"
               )}
             >
@@ -244,8 +244,8 @@ export default function POS() {
                 key={c._id}
                 onClick={() => setActiveCategory(c._id)}
                 className={clsx(
-                  "rounded-full font-medium whitespace-nowrap border",
-                  touchMode ? "px-4 py-2.5 text-sm" : "px-3 py-1.5 text-xs",
+                  "rounded-full font-semibold whitespace-nowrap border-2",
+                  touchMode ? "px-5 py-3.5 text-base" : "px-3 py-1.5 text-xs",
                   activeCategory === c._id ? "bg-brand-600 text-white border-brand-600" : "border-slate-200 text-slate-600"
                 )}
               >
@@ -256,10 +256,10 @@ export default function POS() {
 
           <div
             className={clsx(
-              "grid gap-3",
+              "grid",
               touchMode
-                ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
-                : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+                ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+                : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
             )}
           >
             {filtered.map((p) => (

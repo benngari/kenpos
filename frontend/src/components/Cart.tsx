@@ -35,16 +35,18 @@ export default function Cart({
   return (
     <div
       className={clsx(
-        "shrink-0 bg-white border-l border-slate-200 flex flex-col h-[calc(100vh-4rem)] sticky top-16 overflow-hidden",
-        touchMode ? "w-[380px] xl:w-[420px]" : "w-[340px] xl:w-[380px]"
+        "shrink-0 bg-white border-l border-slate-200 flex flex-col sticky overflow-hidden",
+        touchMode
+          ? "w-[400px] xl:w-[440px] h-[calc(100vh-6rem)] top-24"
+          : "w-[340px] xl:w-[380px] h-[calc(100vh-4rem)] top-16"
       )}
     >
-      <div className="p-4 border-b border-slate-100 flex items-center gap-2">
-        <UserIcon size={16} className="text-slate-400" />
+      <div className={clsx("border-b border-slate-100 flex items-center gap-2", touchMode ? "p-5" : "p-4")}>
+        <UserIcon size={touchMode ? 20 : 16} className="text-slate-400" />
         <select
           className={clsx(
-            "flex-1 border border-slate-200 rounded-lg px-2",
-            touchMode ? "text-base py-2.5" : "text-sm py-1.5"
+            "flex-1 border border-slate-200 rounded-lg px-3",
+            touchMode ? "text-lg py-3.5" : "text-sm py-1.5"
           )}
           value={customer || ""}
           onChange={(e) => setCustomer(e.target.value || null)}
@@ -58,44 +60,46 @@ export default function Cart({
         </select>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-thin px-4 py-2">
+      <div className={clsx("flex-1 overflow-y-auto scrollbar-thin", touchMode ? "px-5 py-3" : "px-4 py-2")}>
         {lines.length === 0 ? (
-          <p className="text-center text-slate-400 text-sm mt-10">Cart is empty. Tap a product to add it.</p>
+          <p className={clsx("text-center text-slate-400 mt-10", touchMode ? "text-base" : "text-sm")}>
+            Cart is empty. Tap a product to add it.
+          </p>
         ) : (
           <ul className="divide-y divide-slate-100">
             {lines.map((line) => (
-              <li key={line.product._id} className="py-3">
+              <li key={line.product._id} className={touchMode ? "py-4" : "py-3"}>
                 <div className="flex justify-between items-start gap-2">
-                  <p className={clsx("font-medium text-slate-800 flex-1 leading-tight", touchMode ? "text-base" : "text-sm")}>
+                  <p className={clsx("font-medium text-slate-800 flex-1 leading-tight", touchMode ? "text-lg" : "text-sm")}>
                     {line.product.name}
                   </p>
                   <button
                     onClick={() => removeLine(line.product._id)}
-                    className={clsx("text-slate-300 hover:text-red-500", touchMode && "p-2 -m-2")}
+                    className={clsx("text-slate-300 hover:text-red-500", touchMode && "p-2.5 -m-2.5")}
                   >
-                    <Trash2 size={touchMode ? 19 : 15} />
+                    <Trash2 size={touchMode ? 22 : 15} />
                   </button>
                 </div>
-                <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center justify-between mt-2.5">
                   {touchMode ? (
-                    <div className="flex items-center gap-2 border border-slate-200 rounded-xl">
+                    <div className="flex items-center gap-3 border-2 border-slate-200 rounded-2xl">
                       <button
-                        className="h-11 w-11 flex items-center justify-center hover:bg-slate-50 active:bg-slate-100 rounded-l-xl"
+                        className="h-14 w-14 flex items-center justify-center hover:bg-slate-50 active:bg-slate-100 rounded-l-2xl"
                         onClick={() => incrementLine(line.product._id, -1)}
                       >
-                        <Minus size={18} />
+                        <Minus size={22} />
                       </button>
                       <button
                         onClick={() => setKeypadFor(line.product._id)}
-                        className="w-12 text-center text-base font-semibold"
+                        className="w-14 text-center text-xl font-bold"
                       >
                         {line.quantity}
                       </button>
                       <button
-                        className="h-11 w-11 flex items-center justify-center hover:bg-slate-50 active:bg-slate-100 rounded-r-xl"
+                        className="h-14 w-14 flex items-center justify-center hover:bg-slate-50 active:bg-slate-100 rounded-r-2xl"
                         onClick={() => incrementLine(line.product._id, 1)}
                       >
-                        <Plus size={18} />
+                        <Plus size={22} />
                       </button>
                     </div>
                   ) : (
@@ -113,7 +117,7 @@ export default function Cart({
                       </button>
                     </div>
                   )}
-                  <p className={clsx("font-semibold text-slate-700", touchMode ? "text-base" : "text-sm")}>
+                  <p className={clsx("font-semibold text-slate-700", touchMode ? "text-lg" : "text-sm")}>
                     KES {(line.product.sellingPrice * line.quantity - line.discount).toFixed(0)}
                   </p>
                 </div>
@@ -123,41 +127,46 @@ export default function Cart({
         )}
       </div>
 
-      <div className="border-t border-slate-100 p-4 space-y-2">
-        <div className="flex justify-between text-sm text-slate-600">
+      <div className={clsx("border-t border-slate-100 space-y-2.5", touchMode ? "p-5" : "p-4")}>
+        <div className={clsx("flex justify-between text-slate-600", touchMode ? "text-base" : "text-sm")}>
           <span>Subtotal</span>
           <span>KES {totals.subtotal.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between text-sm text-slate-600 items-center">
+        <div className={clsx("flex justify-between text-slate-600 items-center", touchMode ? "text-base" : "text-sm")}>
           <span>Overall discount</span>
           <input
             type="number"
             min={0}
             className={clsx(
               "text-right border border-slate-200 rounded-lg px-2",
-              touchMode ? "w-28 py-2 text-base" : "w-24 py-1 text-sm"
+              touchMode ? "w-32 py-2.5 text-lg" : "w-24 py-1 text-sm"
             )}
             value={overallDiscount || ""}
             placeholder="0"
             onChange={(e) => setOverallDiscount(parseFloat(e.target.value) || 0)}
           />
         </div>
-        <div className="flex justify-between text-sm text-slate-600">
+        <div className={clsx("flex justify-between text-slate-600", touchMode ? "text-base" : "text-sm")}>
           <span>VAT</span>
           <span>KES {totals.tax.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between text-base font-bold text-slate-900 pt-2 border-t border-slate-100">
+        <div
+          className={clsx(
+            "flex justify-between font-bold text-slate-900 pt-2.5 border-t border-slate-100",
+            touchMode ? "text-2xl" : "text-base"
+          )}
+        >
           <span>Total</span>
           <span>KES {totals.total.toFixed(2)}</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 pt-2">
+        <div className="grid grid-cols-2 gap-2.5 pt-2">
           <button
             onClick={onHold}
             disabled={lines.length === 0}
             className={clsx(
-              "rounded-lg border border-slate-200 text-slate-600 font-medium hover:bg-slate-50 disabled:opacity-40",
-              touchMode ? "py-4 text-base" : "py-2.5 text-sm"
+              "rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 disabled:opacity-40",
+              touchMode ? "py-5 text-lg" : "py-2.5 text-sm"
             )}
           >
             Hold{!touchMode && " (F4)"}
@@ -166,8 +175,8 @@ export default function Cart({
             onClick={() => (lines.length === 0 ? null : clear())}
             disabled={lines.length === 0}
             className={clsx(
-              "rounded-lg border border-slate-200 text-slate-600 font-medium hover:bg-slate-50 disabled:opacity-40",
-              touchMode ? "py-4 text-base" : "py-2.5 text-sm"
+              "rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 disabled:opacity-40",
+              touchMode ? "py-5 text-lg" : "py-2.5 text-sm"
             )}
           >
             Clear
@@ -177,8 +186,8 @@ export default function Cart({
           onClick={onOpenPayment}
           disabled={lines.length === 0}
           className={clsx(
-            "w-full rounded-lg bg-brand-600 hover:bg-brand-700 active:bg-brand-700 text-white font-semibold disabled:opacity-40",
-            touchMode ? "py-5 text-lg" : "py-3"
+            "w-full rounded-xl bg-brand-600 hover:bg-brand-700 active:bg-brand-700 text-white font-bold disabled:opacity-40",
+            touchMode ? "py-6 text-xl" : "py-3 text-base"
           )}
         >
           Pay{!touchMode && " (F8)"} · KES {totals.total.toFixed(0)}

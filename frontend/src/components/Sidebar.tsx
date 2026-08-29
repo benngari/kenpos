@@ -15,6 +15,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useAuthStore, can } from "../store/authStore";
+import { useUiStore } from "../store/uiStore";
 import clsx from "clsx";
 
 const NAV = [
@@ -36,29 +37,39 @@ const NAV = [
 
 export default function Sidebar() {
   const { user } = useAuthStore();
+  const { touchMode } = useUiStore();
 
   return (
-    <aside className="w-60 shrink-0 bg-slate-900 text-slate-200 h-screen sticky top-0 flex flex-col">
-      <div className="px-5 py-4 border-b border-slate-800">
-        <h1 className="text-lg font-bold text-white">KenPOS</h1>
-        <p className="text-xs text-slate-400">Retail Point of Sale</p>
+    <aside
+      className={clsx(
+        "shrink-0 bg-slate-900 text-slate-200 h-screen sticky top-0 flex flex-col transition-all",
+        touchMode ? "w-24" : "w-60"
+      )}
+    >
+      <div className={clsx("border-b border-slate-800", touchMode ? "px-3 py-5 text-center" : "px-5 py-4")}>
+        <h1 className={clsx("font-bold text-white", touchMode ? "text-base" : "text-lg")}>
+          {touchMode ? "KP" : "KenPOS"}
+        </h1>
+        {!touchMode && <p className="text-xs text-slate-400">Retail Point of Sale</p>}
       </div>
       <nav className="flex-1 overflow-y-auto py-2 scrollbar-thin">
         {NAV.filter((item) => can(user?.role, ...item.roles)).map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
+            title={touchMode ? item.label : undefined}
             className={({ isActive }) =>
               clsx(
-                "flex items-center gap-3 px-5 py-2.5 text-sm font-medium transition-colors",
-                isActive
-                  ? "bg-brand-600 text-white"
-                  : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                "flex font-medium transition-colors",
+                touchMode
+                  ? "flex-col items-center justify-center gap-1.5 px-2 py-4 text-[11px] text-center"
+                  : "flex-row items-center gap-3 px-5 py-2.5 text-sm",
+                isActive ? "bg-brand-600 text-white" : "text-slate-300 hover:bg-slate-800 hover:text-white"
               )
             }
           >
-            <item.icon size={18} />
-            {item.label}
+            <item.icon size={touchMode ? 26 : 18} />
+            <span className={touchMode ? "leading-tight" : undefined}>{item.label}</span>
           </NavLink>
         ))}
       </nav>
