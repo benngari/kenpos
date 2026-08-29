@@ -1,10 +1,12 @@
 import { useAuthStore } from "../store/authStore";
+import { useUiStore } from "../store/uiStore";
 import { useOnlineSync } from "../hooks/useOnlineSync";
-import { LogOut, Wifi, WifiOff, RefreshCw } from "lucide-react";
+import { LogOut, Wifi, WifiOff, RefreshCw, Keyboard, Hand } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function Header({ title }: { title: string }) {
   const { user, logout } = useAuthStore();
+  const { touchMode, toggleTouchMode } = useUiStore();
   const { status } = useOnlineSync();
   const navigate = useNavigate();
 
@@ -12,6 +14,7 @@ export default function Header({ title }: { title: string }) {
     <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-10">
       <h2 className="text-lg font-semibold text-slate-800">{title}</h2>
       <div className="flex items-center gap-5">
+        <TouchModeToggle touchMode={touchMode} onToggle={toggleTouchMode} />
         <ConnectionBadge status={status} />
         <div className="text-right">
           <p className="text-sm font-medium text-slate-800">{user?.name}</p>
@@ -29,6 +32,19 @@ export default function Header({ title }: { title: string }) {
         </button>
       </div>
     </header>
+  );
+}
+
+function TouchModeToggle({ touchMode, onToggle }: { touchMode: boolean; onToggle: () => void }) {
+  return (
+    <button
+      onClick={onToggle}
+      title={touchMode ? "Touch mode on — switch to keyboard/mouse mode" : "Keyboard/mouse mode — switch to touch mode"}
+      className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50"
+    >
+      {touchMode ? <Hand size={14} className="text-brand-600" /> : <Keyboard size={14} className="text-slate-500" />}
+      {touchMode ? "Touch Mode" : "Keyboard Mode"}
+    </button>
   );
 }
 
