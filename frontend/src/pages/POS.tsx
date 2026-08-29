@@ -8,8 +8,10 @@ import PaymentModal from "../components/PaymentModal";
 import Modal from "../components/Modal";
 import Receipt from "../components/Receipt";
 import { useCartStore, computeTotals } from "../store/cartStore";
+import { useUiStore } from "../store/uiStore";
 import { cacheProducts, getCachedProducts, queueSale } from "../lib/offlineDb";
 import { Search, Barcode, PauseCircle } from "lucide-react";
+import clsx from "clsx";
 import toast from "react-hot-toast";
 
 export default function POS() {
@@ -27,6 +29,7 @@ export default function POS() {
 
   const { lines, overallDiscount, customer, addProduct, loadCart, clear, setHoldReference, holdReference } =
     useCartStore();
+  const { touchMode } = useUiStore();
 
   const loadProducts = useCallback(async () => {
     try {
@@ -193,7 +196,6 @@ export default function POS() {
 
   const totals = computeTotals(lines, overallDiscount);
 
-  // CHANGED: added w-full min-w-0 to outer div, min-w-0 to inner div
   return (
     <div className="flex w-full min-w-0">
       <div className="flex-1 min-w-0">
@@ -207,25 +209,33 @@ export default function POS() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
-                placeholder="Search by name, SKU, or scan barcode (F2)"
-                className="w-full pl-9 pr-9 py-2.5 border border-slate-200 rounded-lg text-sm"
+                placeholder={touchMode ? "Search by name, SKU, or scan barcode" : "Search by name, SKU, or scan barcode (F2)"}
+                className={clsx(
+                  "w-full pl-9 pr-9 border border-slate-200 rounded-lg",
+                  touchMode ? "py-4 text-base" : "py-2.5 text-sm"
+                )}
               />
               <Barcode className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
             </div>
             <button
               onClick={openHeldSales}
-              className="flex items-center gap-1.5 px-3 py-2.5 border border-slate-200 rounded-lg text-sm text-slate-600 hover:bg-slate-50"
+              className={clsx(
+                "flex items-center gap-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 whitespace-nowrap",
+                touchMode ? "px-4 py-4 text-base" : "px-3 py-2.5 text-sm"
+              )}
             >
-              <PauseCircle size={16} /> Held Sales
+              <PauseCircle size={touchMode ? 20 : 16} /> Held Sales
             </button>
           </div>
 
           <div className="flex gap-2 mb-4 overflow-x-auto scrollbar-thin pb-1">
             <button
               onClick={() => setActiveCategory(null)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border ${
+              className={clsx(
+                "rounded-full font-medium whitespace-nowrap border",
+                touchMode ? "px-4 py-2.5 text-sm" : "px-3 py-1.5 text-xs",
                 !activeCategory ? "bg-brand-600 text-white border-brand-600" : "border-slate-200 text-slate-600"
-              }`}
+              )}
             >
               All
             </button>
@@ -233,16 +243,25 @@ export default function POS() {
               <button
                 key={c._id}
                 onClick={() => setActiveCategory(c._id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap border ${
+                className={clsx(
+                  "rounded-full font-medium whitespace-nowrap border",
+                  touchMode ? "px-4 py-2.5 text-sm" : "px-3 py-1.5 text-xs",
                   activeCategory === c._id ? "bg-brand-600 text-white border-brand-600" : "border-slate-200 text-slate-600"
-                }`}
+                )}
               >
                 {c.icon} {c.name}
               </button>
             ))}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+          <div
+            className={clsx(
+              "grid gap-3",
+              touchMode
+                ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"
+                : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+            )}
+          >
             {filtered.map((p) => (
               <ProductCard key={p._id} product={p} onClick={() => addProduct(p)} />
             ))}

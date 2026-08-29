@@ -1,5 +1,8 @@
 import { useState } from "react";
 import Header from "../components/Header";
+import { useUiStore } from "../store/uiStore";
+import { Keyboard, Hand } from "lucide-react";
+import clsx from "clsx";
 import toast from "react-hot-toast";
 
 const DEFAULTS = {
@@ -25,6 +28,7 @@ export default function Settings() {
     const saved = localStorage.getItem("kenpos_settings");
     return saved ? JSON.parse(saved) : DEFAULTS;
   });
+  const { touchMode, setTouchMode } = useUiStore();
 
   function save() {
     localStorage.setItem("kenpos_settings", JSON.stringify(form));
@@ -35,6 +39,37 @@ export default function Settings() {
     <>
       <Header title="Settings" />
       <div className="p-6 max-w-2xl space-y-6">
+        <Section title="Device Preferences">
+          <p className="text-xs text-slate-500 -mt-1 mb-2">
+            This applies to this device only — useful when the same cashier uses a desktop at the
+            till and a tablet on the floor.
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setTouchMode(false)}
+              className={clsx(
+                "flex flex-col items-center gap-2 rounded-xl border p-4 text-sm font-medium",
+                !touchMode ? "border-brand-600 bg-brand-50 text-brand-700" : "border-slate-200 text-slate-600 hover:bg-slate-50"
+              )}
+            >
+              <Keyboard size={22} />
+              Keyboard &amp; Mouse
+              <span className="text-[11px] font-normal text-slate-400">F-key shortcuts, compact layout</span>
+            </button>
+            <button
+              onClick={() => setTouchMode(true)}
+              className={clsx(
+                "flex flex-col items-center gap-2 rounded-xl border p-4 text-sm font-medium",
+                touchMode ? "border-brand-600 bg-brand-50 text-brand-700" : "border-slate-200 text-slate-600 hover:bg-slate-50"
+              )}
+            >
+              <Hand size={22} />
+              Touch / Tablet
+              <span className="text-[11px] font-normal text-slate-400">Bigger buttons, on-screen keypad</span>
+            </button>
+          </div>
+        </Section>
+
         <Section title="Store Information">
           <Field label="Store Name" value={form.storeName} onChange={(v) => setForm({ ...form, storeName: v })} />
           <Field label="Address" value={form.address} onChange={(v) => setForm({ ...form, address: v })} />
