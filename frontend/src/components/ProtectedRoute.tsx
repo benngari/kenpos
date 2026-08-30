@@ -17,12 +17,10 @@ export default function ProtectedRoute({ roles }: { roles?: string[] }) {
     );
   }
 
-  // CHANGED: added w-full min-w-0 here so this row is allowed to shrink instead of overflow
   return (
     <div className="flex w-full min-w-0">
       <Sidebar />
-      {/* CHANGED: added min-w-0 and overflow-x-hidden here */}
-      <div className="flex-1 min-w-0 min-h-screen bg-slate-50 overflow-x-hidden">
+      <div className="flex-1 min-w-0 min-h-screen bg-slate-50 dark:bg-slate-900 overflow-x-hidden">
         <Outlet />
       </div>
     </div>

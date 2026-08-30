@@ -77,19 +77,21 @@ export default function PaymentModal({
     : false;
 
   const inputCls = clsx(
-    "w-full border-2 border-slate-200 rounded-lg",
+    "w-full border-2 border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 rounded-lg",
     touchMode ? "px-4 py-4 text-lg rounded-xl" : "px-3 py-2 text-sm"
   );
 
   return (
     <Modal title="Take Payment" onClose={onClose} width={touchMode ? "max-w-lg" : "max-w-md"}>
       <div className={touchMode ? "space-y-5" : "space-y-4"}>
-        <div className={clsx("flex justify-between items-center bg-slate-50 rounded-xl", touchMode ? "p-5" : "p-3")}>
-          <span className={clsx("text-slate-500", touchMode ? "text-base" : "text-sm")}>Amount due</span>
-          <span className={clsx("font-bold text-slate-900", touchMode ? "text-3xl" : "text-xl")}>KES {total.toFixed(2)}</span>
+        <div className={clsx("flex justify-between items-center bg-slate-50 dark:bg-slate-900 rounded-xl", touchMode ? "p-5" : "p-3")}>
+          <span className={clsx("text-slate-500 dark:text-slate-400", touchMode ? "text-base" : "text-sm")}>Amount due</span>
+          <span className={clsx("font-bold text-slate-900 dark:text-slate-50", touchMode ? "text-3xl" : "text-xl")}>
+            KES {total.toFixed(2)}
+          </span>
         </div>
 
-        <label className={clsx("flex items-center gap-2 text-slate-600", touchMode ? "text-base" : "text-sm")}>
+        <label className={clsx("flex items-center gap-2 text-slate-600 dark:text-slate-300", touchMode ? "text-base" : "text-sm")}>
           <input
             type="checkbox"
             checked={splitMode}
@@ -110,7 +112,7 @@ export default function PaymentModal({
                 touchMode ? "py-4 text-sm" : "py-2 text-xs rounded-lg",
                 method === m.key
                   ? "bg-brand-600 text-white border-brand-600"
-                  : "border-slate-200 text-slate-600 hover:bg-slate-50",
+                  : "border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700",
                 m.key === "credit" && !hasCustomer && "opacity-30 cursor-not-allowed"
               )}
             >
@@ -120,11 +122,11 @@ export default function PaymentModal({
         </div>
 
         {method === "credit" && !hasCustomer && (
-          <p className="text-xs text-red-500">Select a customer in the cart before using credit.</p>
+          <p className="text-xs text-red-500 dark:text-red-400">Select a customer in the cart before using credit.</p>
         )}
 
         <div className={touchMode ? "space-y-3" : "space-y-2"}>
-          <label className={clsx("text-slate-500", touchMode ? "text-sm" : "text-xs")}>
+          <label className={clsx("text-slate-500 dark:text-slate-400", touchMode ? "text-sm" : "text-xs")}>
             {splitMode ? "Amount for this method" : "Amount received"}
           </label>
           <input type="number" className={inputCls} value={amount} onChange={(e) => setAmount(e.target.value)} />
@@ -158,7 +160,7 @@ export default function PaymentModal({
           <button
             onClick={addSplitLine}
             className={clsx(
-              "w-full flex items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 hover:bg-slate-50",
+              "w-full flex items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700",
               touchMode ? "py-4 text-base" : "py-2 text-sm"
             )}
           >
@@ -172,19 +174,19 @@ export default function PaymentModal({
               <div
                 key={i}
                 className={clsx(
-                  "flex justify-between items-center bg-slate-50 rounded-lg px-3",
+                  "flex justify-between items-center bg-slate-50 dark:bg-slate-900 rounded-lg px-3",
                   touchMode ? "text-base py-2.5" : "text-sm py-1.5"
                 )}
               >
-                <span className="capitalize">
+                <span className="capitalize text-slate-700 dark:text-slate-200">
                   {s.method}: KES {s.amount.toFixed(2)}
                 </span>
-                <button onClick={() => removeSplit(i)} className="text-slate-400 hover:text-red-500">
+                <button onClick={() => removeSplit(i)} className="text-slate-400 dark:text-slate-500 hover:text-red-500">
                   <Trash2 size={touchMode ? 18 : 14} />
                 </button>
               </div>
             ))}
-            <div className="flex justify-between text-xs text-slate-500 px-1">
+            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
               <span>Remaining</span>
               <span>KES {splitRemaining.toFixed(2)}</span>
             </div>
@@ -194,7 +196,7 @@ export default function PaymentModal({
         {!splitMode && method === "cash" && singleAmount > total && (
           <div
             className={clsx(
-              "flex justify-between font-medium bg-green-50 text-green-700 rounded-xl px-4",
+              "flex justify-between font-medium bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-xl px-4",
               touchMode ? "text-lg py-3.5" : "text-sm py-2"
             )}
           >

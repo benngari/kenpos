@@ -42,7 +42,7 @@ export default function Sidebar() {
   return (
     <aside
       className={clsx(
-        "shrink-0 bg-slate-900 text-slate-200 h-screen sticky top-0 flex flex-col transition-all",
+        "shrink-0 bg-slate-900 dark:bg-black text-slate-200 h-screen sticky top-0 flex flex-col transition-all",
         touchMode ? "w-24" : "w-60"
       )}
     >

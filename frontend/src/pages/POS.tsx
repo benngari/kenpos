@@ -203,7 +203,7 @@ export default function POS() {
         <div className={touchMode ? "p-6" : "p-4"}>
           <div className={clsx("flex items-center gap-3", touchMode ? "mb-6" : "mb-4")}>
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={touchMode ? 20 : 16} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={touchMode ? 20 : 16} />
               <input
                 ref={searchRef}
                 value={search}
@@ -211,16 +211,16 @@ export default function POS() {
                 onKeyDown={handleSearchKeyDown}
                 placeholder={touchMode ? "Search by name, SKU, or scan barcode" : "Search by name, SKU, or scan barcode (F2)"}
                 className={clsx(
-                  "w-full pl-10 pr-10 border-2 border-slate-200 rounded-xl",
+                  "w-full pl-10 pr-10 border-2 border-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-xl",
                   touchMode ? "py-5 text-lg rounded-2xl" : "py-2.5 text-sm"
                 )}
               />
-              <Barcode className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300" size={touchMode ? 20 : 16} />
+              <Barcode className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 dark:text-slate-500" size={touchMode ? 20 : 16} />
             </div>
             <button
               onClick={openHeldSales}
               className={clsx(
-                "flex items-center gap-2 border-2 border-slate-200 text-slate-600 hover:bg-slate-50 whitespace-nowrap font-semibold",
+                "flex items-center gap-2 border-2 border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 whitespace-nowrap font-semibold",
                 touchMode ? "px-6 py-5 text-lg rounded-2xl" : "px-3 py-2.5 text-sm rounded-lg"
               )}
             >
@@ -234,7 +234,9 @@ export default function POS() {
               className={clsx(
                 "rounded-full font-semibold whitespace-nowrap border-2",
                 touchMode ? "px-5 py-3.5 text-base" : "px-3 py-1.5 text-xs",
-                !activeCategory ? "bg-brand-600 text-white border-brand-600" : "border-slate-200 text-slate-600"
+                !activeCategory
+                  ? "bg-brand-600 text-white border-brand-600"
+                  : "border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300"
               )}
             >
               All
@@ -246,7 +248,9 @@ export default function POS() {
                 className={clsx(
                   "rounded-full font-semibold whitespace-nowrap border-2",
                   touchMode ? "px-5 py-3.5 text-base" : "px-3 py-1.5 text-xs",
-                  activeCategory === c._id ? "bg-brand-600 text-white border-brand-600" : "border-slate-200 text-slate-600"
+                  activeCategory === c._id
+                    ? "bg-brand-600 text-white border-brand-600"
+                    : "border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300"
                 )}
               >
                 {c.icon} {c.name}
@@ -266,7 +270,9 @@ export default function POS() {
               <ProductCard key={p._id} product={p} onClick={() => addProduct(p)} />
             ))}
             {filtered.length === 0 && (
-              <p className="col-span-full text-center text-slate-400 py-10 text-sm">No products match your search</p>
+              <p className="col-span-full text-center text-slate-400 dark:text-slate-500 py-10 text-sm">
+                No products match your search
+              </p>
             )}
           </div>
         </div>

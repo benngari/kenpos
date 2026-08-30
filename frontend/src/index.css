@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CHANGED: added max-width and overflow-x to prevent horizontal page overflow */
 html, body, #root {
   height: 100%;
   max-width: 100vw;
@@ -11,6 +10,11 @@ html, body, #root {
 
 body {
   font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.dark body {
+  background-color: #0f172a;
+  color: #e2e8f0;
 }
 
 /* Receipt printing - works with 58mm/80mm thermal printers */

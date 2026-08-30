@@ -34,7 +34,7 @@ export default function NumericKeypad({
 
   return (
     <Modal title={title} onClose={onClose} width="max-w-sm">
-      <div className="text-center text-5xl font-bold text-slate-800 bg-slate-50 rounded-2xl py-6 mb-5">
+      <div className="text-center text-5xl font-bold text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 rounded-2xl py-6 mb-5">
         {value}
       </div>
       <div className="grid grid-cols-3 gap-3">
@@ -42,7 +42,7 @@ export default function NumericKeypad({
           <button
             key={k}
             onClick={() => press(k)}
-            className="h-20 rounded-2xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-3xl font-bold text-slate-700 flex items-center justify-center"
+            className="h-20 rounded-2xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 active:bg-slate-300 dark:active:bg-slate-500 text-3xl font-bold text-slate-700 dark:text-slate-100 flex items-center justify-center"
           >
             {k === "clear" ? "C" : k === "back" ? <Delete size={26} /> : k}
           </button>
